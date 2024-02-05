@@ -1,1 +1,0 @@
-for expense in expenses:
