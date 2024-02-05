@@ -14,13 +14,17 @@ def validate_price(price_str):
     return price_str.isdigit()
 
 
-while True:
-    try:
+try:
+    while True:
         print("Select an option:")
         print("1. Enter a new expense")
         print("2. View expenses summary")
 
-        choice = int(input())
+        try:
+            choice = int(input())
+        except ValueError:
+            print("Invalid input. Please enter a valid option.")
+            continue
 
         if choice == 1:
             date = input("Enter the date of the expense(YYYY-MM-DD): ")
@@ -39,7 +43,12 @@ while True:
                 print(f"{idx + 1}. {category[0]}")
             print(f"{len(categories) + 1}. Create a new category")
 
-            category_choice = int(input())
+            try:
+                category_choice = int(input())
+            except ValueError:
+                print("Invalid input. Please enter a valid category number.")
+                continue
+
             category = (
                 input("Enter the new category name: ")
                 if category_choice == len(categories) + 1
@@ -61,7 +70,12 @@ while True:
             print("1. View all expenses")
             print("2. View monthly expenses by category")
             print("3. View all expenses by category")
-            view_choice = int(input())
+
+            try:
+                view_choice = int(input())
+            except ValueError:
+                print("Invalid input. Please enter a valid view option.")
+                continue
 
             if view_choice == 1:
                 cur.execute("SELECT * FROM expenses")
@@ -87,7 +101,12 @@ while True:
                 print("Select a category by number:")
                 for idx, category in enumerate(categories):
                     print(f"{idx + 1}. {category[0]}")
-                category_choice = int(input())
+                try:
+                    category_choice = int(input())
+                except ValueError:
+                    print("Invalid input. Please enter a valid category number.")
+                    continue
+
                 selected_category = categories[category_choice - 1][0]
                 cur.execute("SELECT * FROM expenses WHERE category = ?",
                             (selected_category,))
@@ -103,11 +122,7 @@ while True:
         if repeat.lower() != 'y':
             break
 
-    except ValueError:
-        print("Invalid input. Please enter a valid value.")
-        continue
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        break
-
-conn.close()
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+finally:
+    conn.close()
