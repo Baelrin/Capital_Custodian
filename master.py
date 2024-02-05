@@ -55,6 +55,20 @@ while True:
                 """SELECT category, SUM(price) FROM expenses 
                 WHERE strftime('%m', Date) = ? AND strftime('%Y', Date) = ?
                 GROUP BY category""", (month, year))
+        elif choice == 3:
+            print("View all expenses by category")
+            cur.execute("SELECT DISTINCT category FROM expenses")
+            categories = cur.fetchall()
+            print("Select a category by number:")
+            for idx, category in enumerate(categories):
+                print(f"{idx + 1}. {category[0]}")
+            category_choice = int(input())
+            selected_category = categories[category_choice - 1][0]
+            cur.execute("SELECT * FROM expenses WHERE category = ?",
+                        (selected_category,))
+            expenses = cur.fetchall()
+            for expense in expenses:
+                print(expense)
 
         expenses = cur.fetchall()
         for expense in expenses:
