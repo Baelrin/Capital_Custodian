@@ -1,16 +1,18 @@
 import sqlite3
 import re
 
-conn = sqlite3.connect('expenses.db')
-cur = conn.cursor()
+conn = sqlite3.connect('expenses.db')  # Connect to the SQLite database
+cur = conn.cursor()  # Create a cursor object to interact with the database
 
 
 def validate_date(date_str):
+    # Validate date format (YYYY-MM-DD)
     pattern = r'\d{4}-\d{2}-\d{2}'
     return bool(re.match(pattern, date_str))
 
 
 def validate_price(price_str):
+    # Check if the price is a digit
     return price_str.isdigit()
 
 
@@ -21,7 +23,7 @@ try:
         print("2. View expenses summary")
 
         try:
-            choice = int(input())
+            choice = int(input())  # Get user choice
         except ValueError:
             print("Invalid input. Please enter a valid option.")
             continue
@@ -44,7 +46,7 @@ try:
             print(f"{len(categories) + 1}. Create a new category")
 
             try:
-                category_choice = int(input())
+                category_choice = int(input())  # Get user category choice
             except ValueError:
                 print("Invalid input. Please enter a valid category number.")
                 continue
@@ -63,7 +65,7 @@ try:
             cur.execute("INSERT INTO expenses (Date, description, category, price) VALUES (?, ?, ?, ?)",
                         (date, description, category, price))
 
-            conn.commit()
+            conn.commit()  # Commit changes to the database
 
         elif choice == 2:
             print("Select an option:")
@@ -72,7 +74,7 @@ try:
             print("3. View all expenses by category")
 
             try:
-                view_choice = int(input())
+                view_choice = int(input())  # Get user view choice
             except ValueError:
                 print("Invalid input. Please enter a valid view option.")
                 continue
@@ -102,7 +104,7 @@ try:
                 for idx, category in enumerate(categories):
                     print(f"{idx + 1}. {category[0]}")
                 try:
-                    category_choice = int(input())
+                    category_choice = int(input())  # Get user category choice
                 except ValueError:
                     print("Invalid input. Please enter a valid category number.")
                     continue
@@ -123,6 +125,6 @@ try:
             break
 
 except Exception as e:
-    print(f"An unexpected error occurred: {e}")
+    print(f"An unexpected error occurred: {e}")  # Print any errors
 finally:
-    conn.close()
+    conn.close()  # Close the database connection
