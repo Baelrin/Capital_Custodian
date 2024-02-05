@@ -6,13 +6,29 @@ cur = conn.cursor()  # Create a cursor object to interact with the database
 
 
 def validate_date(date_str):
-    # Validate date format (YYYY-MM-DD)
+    """
+    Checks if the provided string matches the YYYY-MM-DD date format.
+
+    Args:
+        date_str (str): The date string to validate.
+
+    Returns:
+        bool: True if the string matches the date format, False otherwise.
+    """
     pattern = r'\d{4}-\d{2}-\d{2}'
     return bool(re.match(pattern, date_str))
 
 
 def validate_price(price_str):
-    # Check if the price is a digit
+    """
+    Checks if the provided string represents a numeric value.
+
+    Args:
+        price_str (str): The price string to validate.
+
+    Returns:
+        bool: True if the string is numeric, False otherwise.
+    """
     return price_str.isdigit()
 
 
@@ -62,6 +78,7 @@ try:
                 print("Invalid price. Please enter a numeric value.")
                 continue
 
+            # Insert the new expense entry into the database
             cur.execute("INSERT INTO expenses (Date, description, category, price) VALUES (?, ?, ?, ?)",
                         (date, description, category, price))
 
@@ -80,6 +97,7 @@ try:
                 continue
 
             if view_choice == 1:
+                # Fetch and display all expenses from the database
                 cur.execute("SELECT * FROM expenses")
                 expenses = cur.fetchall()
                 for expense in expenses:
@@ -88,6 +106,7 @@ try:
             elif view_choice == 2:
                 month = input("Enter the month (MM): ")
                 year = input("Enter the year (YYYY): ")
+                # Fetch and display expenses grouped by category for the specified month and year
                 cur.execute(
                     """SELECT category, SUM(price) FROM expenses
                     WHERE strftime('%m', Date) = ? AND strftime('%Y', Date) = ?
@@ -110,6 +129,7 @@ try:
                     continue
 
                 selected_category = categories[category_choice - 1][0]
+                # Fetch and display all expenses for the selected category
                 cur.execute("SELECT * FROM expenses WHERE category = ?",
                             (selected_category,))
                 expenses = cur.fetchall()
