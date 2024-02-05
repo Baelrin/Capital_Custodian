@@ -25,11 +25,11 @@ while True:
         print(f"{len(categories) + 1}. Create a new category")
 
         category_choice = int(input())
-        if category_choice == len(categories) + 1:
-            category = input("Enter the new category name: ")
-        else:
-            category = categories[category_choice - 1][0]
-
+        category = (
+            input("Enter the new category name: ")
+            if category_choice == len(categories) + 1
+            else categories[category_choice - 1][0]
+        )
         price = input("Enter the price of the expense: ")
 
         cur.execute("INSERT INTO expenses (Date, description, category, price) VALUES (?, ?, ?, ?)",
@@ -67,5 +67,5 @@ while True:
     repeat = input("Would you like to do something else (y/n)?\n")
     if repeat.lower() != 'y':
         break
-    
+
 conn.close()
